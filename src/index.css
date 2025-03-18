@@ -1,0 +1,39 @@
+/* src/index.css */
+:root {
+  --primary-color: #ff4d94;
+  --secondary-color: #6f42c1;
+  --white: #ffffff;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --gradient-hover: linear-gradient(90deg, #ff4d94, #6f42c1);
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-blur: blur(10px);
+  --text-color: #333;
+  --background-color: #f0f2f5;
+  --card-bg: #ffffff;
+  --table-bg: #ffffff;
+  --table-header-bg: linear-gradient(90deg, #ff4d94, #6f42c1);
+  --table-hover-bg: #f5f5f5;
+  --sidebar-bg: rgba(255, 255, 255, 0.15);
+  --border-color: #e0e0e0; /* Nouvelle variable pour la bordure */
+}
+
+[data-theme="dark"] {
+  --text-color: #e0e0e0;
+  --background-color: #1a1a1a;
+  --card-bg: #2c2c2c;
+  --table-bg: #2c2c2c;
+  --table-header-bg: linear-gradient(90deg, #ff4d94, #6f42c1);
+  --table-hover-bg: #3a3a3a;
+  --sidebar-bg: rgba(44, 44, 44, 0.9);
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  --border-color: #444; /* Bordure plus sombre pour le mode sombre */
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+  background: var(--background-color);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

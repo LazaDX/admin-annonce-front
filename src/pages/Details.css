@@ -1,0 +1,67 @@
+/* src/pages/Details.css */
+.details-page h2 {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 2rem;
+  }
+  
+  .details-container {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .details-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .details-item label {
+    font-weight: 600;
+    color: var(--text-color);
+  }
+  
+  .details-item p {
+    margin: 0;
+    color: var(--text-color);
+  }
+  
+  .back-btn {
+    margin-top: 2rem;
+    padding: 0.8rem 2rem;
+    background: var(--gradient-hover);
+    border: none;
+    border-radius: 25px;
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .back-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(111, 66, 193, 0.5);
+  }
+  
+  @media (max-width: 768px) {
+    .details-container {
+      padding: 1rem;
+      max-width: 100%;
+    }
+  
+    .details-item {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  
+    .back-btn {
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
