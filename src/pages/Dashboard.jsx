@@ -22,6 +22,10 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 const Dashboard = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalAnnonces, setTotalAnnonces] = useState(0);
+  const [visitCount, setVisitCount] = useState(0);
+  const [usersByMonth, setUsersByMonth] = useState([]);
+  const [postsByMonth, setPostsByMonth] = useState([]);
+
 
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -44,34 +48,103 @@ const Dashboard = () => {
       .catch((error) =>
         console.error("Erreur lors de la récupération des annonces :", error)
       );
+
+    fetch('http://localhost:8000/api/visits/count')
+      .then(response => response.json())
+      .then(data => setVisitCount(data.visitCount))
+      .catch(error => console.error('Erreur:', error));
+
+    fetch("http://localhost:8000/api/users/by-month")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("usersByMonth:", data.data);
+        setUsersByMonth(data.data);
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la récupération des utilisateurs par mois :", error)
+      );
+
+    fetch("http://localhost:8000/api/posts/by-month")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status) {
+          setPostsByMonth(data.data);
+        } else {
+          console.error("Erreur dans la réponse postsByMonth :", data);
+        }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la récupération des postsByMonth :", error)
+      );
   }, []);
 
-  // Données fictives pour les graphiques linéaires
-  const revenueData = {
-    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
-    datasets: [
-      {
-        label: "Revenus (Ar)",
-        data: [5000000, 7000000, 12000000, 9000000, 15000000, 12500000],
-        borderColor: "#ff4d94",
-        backgroundColor: "rgba(255, 77, 148, 0.2)",
-        fill: true,
-      },
-    ],
-  };
+  const monthLabels = [
+    "Janv", "Fév", "Mars", "Avr", "Mai", "Juin",
+    "Juil", "Août", "Sept", "Oct", "Nov", "Déc"
+  ];
 
-  const usersData = {
-    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
+  const dynamicUsersData = {
+    labels: usersByMonth.map((item) => monthLabels[item.month - 1]),
     datasets: [
       {
         label: "Nouveaux Utilisateurs",
-        data: [200, 300, 450, 380, 600, 520],
+        data: usersByMonth.map((item) => item.count),
         borderColor: "#6f42c1",
         backgroundColor: "rgba(111, 66, 193, 0.2)",
         fill: true,
       },
     ],
   };
+
+  const postsData = {
+    labels: postsByMonth.length > 0
+      ? postsByMonth.map((item) => {
+        const monthNames = [
+          "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
+          "Juil", "Août", "Sep", "Oct", "Nov", "Déc"
+        ];
+        return monthNames[item.month - 1]; // Assure-toi que ton API renvoie month = 1 pour Janvier
+      })
+      : [],
+    datasets: [
+      {
+        label: "Posts Publiés",
+        data: postsByMonth.length > 0
+          ? postsByMonth.map((item) => item.count)
+          : [],
+        backgroundColor: "#3498db", // Choisis la couleur que tu veux
+        borderColor: "#2980b9",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Données fictives pour les graphiques linéaires
+  // const revenueData = {
+  //   labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
+  //   datasets: [
+  //     {
+  //       label: "Revenus (Ar)",
+  //       data: [5000000, 7000000, 12000000, 9000000, 15000000, 12500000],
+  //       borderColor: "#ff4d94",
+  //       backgroundColor: "rgba(255, 77, 148, 0.2)",
+  //       fill: true,
+  //     },
+  //   ],
+  // };
+
+  // const usersData = {
+  //   labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
+  //   datasets: [
+  //     {
+  //       label: "Nouveaux Utilisateurs",
+  //       data: [200, 300, 450, 380, 600, 520],
+  //       borderColor: "#6f42c1",
+  //       backgroundColor: "rgba(111, 66, 193, 0.2)",
+  //       fill: true,
+  //     },
+  //   ],
+  // };
 
   // Données fictives pour les graphiques cylindriques
   const annoncesData = {
@@ -124,36 +197,36 @@ const Dashboard = () => {
           icon="fas fa-bullhorn"
           color="linear-gradient(90deg, #2ecc71, #27ae60)"
         />
-        <DashboardCard
+        {/* <DashboardCard
           title="Revenus"
           value="12,500,000 Ar"
           icon="fas fa-money-bill"
           color="linear-gradient(90deg, #ffd700, #ffaa00)"
-        />
+        /> */}
         <DashboardCard
           title="Visites"
-          value="45,678"
+          value={visitCount}
           icon="fas fa-eye"
           color="linear-gradient(90deg, #3498db, #2980b9)"
         />
       </div>
       <div className="dashboard-charts">
-        <div className="chart-container">
+        {/* <div className="chart-container">
           <h3>Revenus Mensuels</h3>
           <Line data={revenueData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: "Revenus Mensuels" } } }} />
-        </div>
+        </div> */}
         <div className="chart-container">
           <h3>Nouveaux Utilisateurs</h3>
-          <Line data={usersData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: "Nouveaux Utilisateurs" } } }} />
+          <Line data={dynamicUsersData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: "Nouveaux Utilisateurs" } } }} />
         </div>
         <div className="chart-container">
           <h3>Annonces Publiées par Mois</h3>
-          <Bar data={annoncesData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: "Annonces Publiées par Mois" } } }} />
+          <Bar data={postsData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: "Annonces Publiées par Mois" } } }} />
         </div>
-        <div className="chart-container">
+        {/* <div className="chart-container">
           <h3>Transactions par Mois</h3>
           <Bar data={transactionsData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: "Transactions par Mois" } } }} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
